@@ -11,6 +11,11 @@ contract CloudToken {
     using SafeMath for uint256;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
@@ -53,11 +58,13 @@ contract CloudToken {
         return _allowances[_owner][_spender];
     }
 
+    /// @dev Approve the spending of '_amount' of sender tokens by spender
     function approve(address _spender, uint256 _amount)
         external
         returns (bool)
     {
         _allowances[msg.sender][_spender] = _amount;
+        emit Approval(msg.sender, _spender, _amount);
         return true;
     }
 }
