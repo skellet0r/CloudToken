@@ -1,3 +1,4 @@
+import brownie
 from brownie.test import given, strategy
 
 
@@ -27,3 +28,9 @@ def test_successful_transfer_returns_true(adam, beth, token):
     tx = token.transfer(beth, 10 ** 18, {"from": adam})
 
     assert tx.return_value is True
+
+
+@given(amount=strategy("uint256", min_value=10 ** 21 + 1))
+def test_transfer_reverts_with_insufficient_balance(adam, beth, token, amount):
+    with brownie.reverts("dev: Insufficient balance"):
+        token.transfer(beth, amount, {"from": adam})
