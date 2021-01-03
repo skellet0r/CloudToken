@@ -24,6 +24,11 @@ contract CloudToken {
         return _totalSupply;
     }
 
+    /// @dev Return the balance of a token holder
+    function balanceOf(address _account) external view returns (uint256) {
+        return _balances[_account];
+    }
+
     /// @dev Transfer '_amount' of tokens to '_recipient' from sender
     function transfer(address _recipient, uint256 _amount) external {
         _balances[msg.sender] = _balances[msg.sender].sub(_amount);
