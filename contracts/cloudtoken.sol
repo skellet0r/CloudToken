@@ -36,6 +36,7 @@ contract CloudToken {
         external
         returns (bool)
     {
+        require(_balances[msg.sender] >= _amount); // dev: Insufficient balance
         _balances[msg.sender] = _balances[msg.sender].sub(_amount);
         _balances[_recipient] = _balances[_recipient].add(_amount);
         emit Transfer(_recipient, msg.sender, _amount);
