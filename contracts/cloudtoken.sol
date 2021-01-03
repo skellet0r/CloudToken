@@ -67,4 +67,20 @@ contract CloudToken {
         emit Approval(msg.sender, _spender, _amount);
         return true;
     }
+
+    /// @dev Tranfer tokens from '_owner' to '_recipient' and decrement sender's allowance
+    function transferFrom(address _sender, address _recipient, uint256 _amount)
+        external
+        returns (bool)
+    {
+        require(_allowances[_sender][msg.sender] >= _amount); // dev: Insufficient allowance
+        require(_balances[_sender] >= _amount); // dev: Insufficient balance
+        _allowances[_sender][msg.sender] = _allowances[_sender][msg.sender].sub(
+            _amount
+        );
+        _balances[_sender] = _balances[_sender].sub(_amount);
+        _balances[_recipient] = _balances[_recipient].add(_amount);
+        emit Transfer(_sender, _recipient, _amount);
+        return true;
+    }
 }
