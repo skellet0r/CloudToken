@@ -14,6 +14,7 @@ contract CloudToken {
 
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
 
     /// @dev Amount '_supply' is the total supply of tokens in existence
     constructor(uint256 _supply) public {
@@ -40,6 +41,23 @@ contract CloudToken {
         _balances[msg.sender] = _balances[msg.sender].sub(_amount);
         _balances[_recipient] = _balances[_recipient].add(_amount);
         emit Transfer(_recipient, msg.sender, _amount);
+        return true;
+    }
+
+    /// @dev Check the remaining number of tokens '_spender' is allowed to spend on '_owner' behalf
+    function allowance(address _owner, address _spender)
+        external
+        view
+        returns (uint256)
+    {
+        return _allowances[_owner][_spender];
+    }
+
+    function approve(address _spender, uint256 _amount)
+        external
+        returns (bool)
+    {
+        _allowances[msg.sender][_spender] = _amount;
         return true;
     }
 }
