@@ -10,6 +10,8 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract CloudToken {
     using SafeMath for uint256;
 
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
 
