@@ -32,8 +32,13 @@ contract CloudToken {
     }
 
     /// @dev Transfer '_amount' of tokens to '_recipient' from sender
-    function transfer(address _recipient, uint256 _amount) external {
+    function transfer(address _recipient, uint256 _amount)
+        external
+        returns (bool)
+    {
         _balances[msg.sender] = _balances[msg.sender].sub(_amount);
         _balances[_recipient] = _balances[_recipient].add(_amount);
+        emit Transfer(_recipient, msg.sender, _amount);
+        return true;
     }
 }
