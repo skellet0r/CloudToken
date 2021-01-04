@@ -3,11 +3,12 @@
 pragma solidity ^0.7.5;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 /// @title A contract for interacting with the clouds
 /// @author Edward Amor
-contract CloudToken {
+contract CloudToken is Ownable {
     using SafeMath for uint256;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -42,7 +43,6 @@ contract CloudToken {
         return _balances[_account];
     }
 
-    /// @dev Transfer '_amount' of tokens to '_recipient' from sender
     /**
         @dev Transfer '_amount' of tokens to '_recipient' from sender.
         This is a wrapper around the _transfer function.
