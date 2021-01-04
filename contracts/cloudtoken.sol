@@ -11,6 +11,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract CloudToken is Ownable {
     using SafeMath for uint256;
 
+    receive() external payable {
+        _mint(msg.sender, msg.value);
+    }
+
+    fallback() external {
+        revert(); // dev: Fallback function called
+    }
+
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(
         address indexed owner,
