@@ -17,9 +17,9 @@ contract CloudToken {
         uint256 value
     );
 
-    uint256 private _totalSupply;
-    mapping(address => uint256) private _balances;
-    mapping(address => mapping(address => uint256)) private _allowances;
+    uint256 private _totalSupply; // Total number of tokens in existence
+    mapping(address => uint256) private _balances; // Token holder balances
+    mapping(address => mapping(address => uint256)) private _allowances; // Map of allowances
 
     /// @dev Amount '_supply' is the total supply of tokens in existence
     constructor(uint256 _supply) public {
@@ -38,8 +38,13 @@ contract CloudToken {
     }
 
     /// @dev Transfer '_amount' of tokens to '_recipient' from sender
+    /**
+        @dev Transfer '_amount' of tokens to '_recipient' from sender.
+        This is a wrapper around the _transfer function.
+     */
     function transfer(address _recipient, uint256 _amount)
         external
+        _verify_balance(msg.sender, _amount)
         returns (bool)
     {
         _transfer(msg.sender, _recipient, _amount);
@@ -60,7 +65,7 @@ contract CloudToken {
         external
         returns (bool)
     {
-        _allowances[msg.sender][_spender] = _amount;
+        _allowances[msg.sender][_spender] = _amount; // Set the balance, overwritting the previous allowance
         emit Approval(msg.sender, _spender, _amount);
         return true;
     }
@@ -68,9 +73,10 @@ contract CloudToken {
     /// @dev Tranfer tokens from '_owner' to '_recipient' and decrement sender's allowance
     function transferFrom(address _sender, address _recipient, uint256 _amount)
         external
+        _verify_allowance(_sender, msg.sender, _amount)
+        _verify_balance(_sender, _amount)
         returns (bool)
     {
-        require(_allowances[_sender][msg.sender] >= _amount); // dev: Insufficient allowance
         _allowances[_sender][msg.sender] = _allowances[_sender][msg.sender].sub(
             _amount
         );
@@ -87,10 +93,18 @@ contract CloudToken {
         _;
     }
 
+    modifier _verify_allowance(
+        address _owner,
+        address _spender,
+        uint256 _amount
+    ) {
+        require(_allowances[_owner][_spender] >= _amount); // dev: Insufficient allowance
+        _;
+    }
+
     /// @dev Private function which implements the core transfer logic
     function _transfer(address _sender, address _recipient, uint256 _amount)
         private
-        _verify_balance(_sender, _amount)
     {
         _balances[_sender] = _balances[_sender].sub(_amount);
         _balances[_recipient] = _balances[_recipient].add(_amount);
