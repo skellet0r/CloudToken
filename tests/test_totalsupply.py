@@ -1,6 +1,8 @@
 from brownie.test import given, strategy
 
 
+# this is also a valid test of the _mint private function
+# however that function is not exposed externally
 @given(amount=strategy("uint256"))
 def test_totalsupply_initial_supply_is_correct(CloudToken, adam, amount):
     token = adam.deploy(CloudToken, amount)
