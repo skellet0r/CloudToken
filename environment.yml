@@ -54,28 +54,38 @@ dependencies:
     - apipkg==1.5
     - asttokens==2.0.4
     - attrs==20.3.0
+    - backcall==0.2.0
     - base58==2.0.1
     - bitarray==1.2.2
     - black==19.10b0
+    - blake2b-py==0.1.3
+    - cached-property==1.5.2
     - chardet==4.0.0
     - cytoolz==0.11.0
+    - decorator==4.4.2
     - eth-abi==2.1.1
-    - eth-account==0.5.2
+    - eth-account==0.5.4
+    - eth-bloom==1.0.3
     - eth-brownie==1.12.3
     - eth-event==1.2.0
     - eth-hash==0.2.0
     - eth-keyfile==0.5.1
     - eth-keys==0.3.3
     - eth-rlp==0.2.1
+    - eth-tester==0.5.0b3
     - eth-typing==2.2.2
     - eth-utils==1.9.5
+    - ethpm-cli==0.3.0
     - execnet==1.7.1
     - hexbytes==0.2.1
     - hypothesis==5.41.3
     - idna==2.10
     - inflection==0.5.0
     - iniconfig==1.1.1
-    - ipfshttpclient==0.6.1
+    - ipfshttpclient==0.7.0a1
+    - ipython==7.19.0
+    - ipython-genutils==0.2.0
+    - jedi==0.18.0
     - jsonschema==3.2.0
     - lru-dict==1.1.6
     - more-itertools==8.6.0
@@ -84,35 +94,47 @@ dependencies:
     - netaddr==0.8.0
     - packaging==20.8
     - parsimonious==0.8.1
+    - parso==0.8.1
+    - pexpect==4.8.0
+    - pickleshare==0.7.5
     - pluggy==0.13.1
     - prompt-toolkit==3.0.8
     - protobuf==3.14.0
     - psutil==5.8.0
+    - ptyprocess==0.7.0
     - py==1.10.0
+    - py-ecc==4.1.0
+    - py-evm==0.3.0a20
+    - py-geth==2.4.0
     - py-solc-ast==1.2.8
     - py-solc-x==1.1.0
     - pycryptodome==3.9.9
+    - pyethash==0.1.27
     - pygments==2.6.1
     - pygments-lexer-solidity==0.5.1
     - pyjwt==1.7.1
     - pyparsing==2.4.7
     - pyrsistent==0.17.3
+    - pysha3==1.0.2
     - pytest==6.0.1
     - pytest-forked==1.3.0
     - pytest-xdist==1.34.0
     - python-dateutil==2.8.1
     - pythx==1.6.1
     - requests==2.25.1
-    - rlp==1.2.0
+    - rlp==2.0.1
     - semantic-version==2.8.5
     - sortedcontainers==2.3.0
+    - termcolor==1.1.0
     - toolz==0.11.1
     - tqdm==4.53.0
+    - traitlets==5.0.5
+    - trie==2.0.0a5
     - urllib3==1.26.2
     - varint==1.0.2
     - vvm==0.1.0
     - vyper==0.2.8
     - wcwidth==0.2.5
-    - web3==5.11.1
+    - web3==5.13.1
     - websockets==8.1
 prefix: /home/skelletor/.pyenv/versions/anaconda3-2020.02/envs/CloudToken
