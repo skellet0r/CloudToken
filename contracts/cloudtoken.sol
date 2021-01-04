@@ -19,6 +19,17 @@ contract CloudToken is Ownable {
         revert(); // dev: Fallback function called
     }
 
+    function withdraw(address _recipient, uint256 _amount)
+        external
+        onlyOwner
+        returns (bool)
+    {
+        require(_amount <= address(this).balance); // dev: Insufficient ether balance
+        address payable recipient = payable(_recipient);
+        recipient.transfer(_amount);
+        return true;
+    }
+
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(
         address indexed owner,
