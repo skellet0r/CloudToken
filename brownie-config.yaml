@@ -31,6 +31,7 @@ compiler:
       runs: 200
     remappings:
       - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@3.3.0"
+      - "@alphachain=alphachainio/chainlink-contracts@1.1.0"
   vyper:
     version: null
 
@@ -59,4 +60,5 @@ hypothesis:
 autofetch_sources: false
 dependencies:
   - OpenZeppelin/openzeppelin-contracts@3.3.0
+  - alphachainio/chainlink-contracts@1.1.0
 dev_deployment_artifacts: false
