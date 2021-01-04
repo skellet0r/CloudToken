@@ -23,8 +23,13 @@ contract CloudToken {
 
     /// @dev Amount '_supply' is the total supply of tokens in existence
     constructor(uint256 _supply) public {
-        _totalSupply = _supply;
-        _balances[msg.sender] = _supply;
+        _mint(msg.sender, _supply);
+    }
+
+    /// @dev Allows for the creation of new tokens, which are given to '_account'
+    function _mint(address _account, uint256 _amount) private {
+        _balances[_account] = _balances[_account].add(_amount);
+        _totalSupply = _totalSupply.add(_amount);
     }
 
     /// @dev Return the total supply of tokens in existence
