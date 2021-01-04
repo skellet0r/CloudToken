@@ -40,9 +40,9 @@ contract CloudToken {
     /// @dev Transfer '_amount' of tokens to '_recipient' from sender
     function transfer(address _recipient, uint256 _amount)
         external
+        _verify_balance(msg.sender, _amount)
         returns (bool)
     {
-        require(_balances[msg.sender] >= _amount); // dev: Insufficient balance
         _balances[msg.sender] = _balances[msg.sender].sub(_amount);
         _balances[_recipient] = _balances[_recipient].add(_amount);
         emit Transfer(_recipient, msg.sender, _amount);
@@ -71,10 +71,10 @@ contract CloudToken {
     /// @dev Tranfer tokens from '_owner' to '_recipient' and decrement sender's allowance
     function transferFrom(address _sender, address _recipient, uint256 _amount)
         external
+        _verify_balance(_sender, _amount)
         returns (bool)
     {
         require(_allowances[_sender][msg.sender] >= _amount); // dev: Insufficient allowance
-        require(_balances[_sender] >= _amount); // dev: Insufficient balance
         _allowances[_sender][msg.sender] = _allowances[_sender][msg.sender].sub(
             _amount
         );
@@ -82,5 +82,14 @@ contract CloudToken {
         _balances[_recipient] = _balances[_recipient].add(_amount);
         emit Transfer(_sender, _recipient, _amount);
         return true;
+    }
+
+    /**
+        @dev Modifier to verify that '_account' has a balance of '_amount'
+        or greater
+     */
+    modifier _verify_balance(address _account, uint256 _amount) {
+        require(_balances[_account] >= _amount); // dev: Insufficient balance
+        _;
     }
 }
