@@ -42,8 +42,14 @@ contract CloudToken is Ownable {
     mapping(address => mapping(address => uint256)) private _allowances; // Map of allowances
 
     /// @dev Amount '_supply' is the total supply of tokens in existence
+    /// @dev '_feedAddress' is the address of a chainlink ETH/USD price feed oracle
     constructor(uint256 _supply) public {
         _mint(msg.sender, _supply);
+    }
+
+    function usd_to_wei(uint256 _eth_usd, uint8 _decimals) public pure returns (uint256) {
+        uint16 power = 18 + _decimals;
+        return (10 ** power).div(_eth_usd);
     }
 
     /// @dev Allows for the creation of new tokens, which are given to '_account'
