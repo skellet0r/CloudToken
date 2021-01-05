@@ -52,6 +52,11 @@ contract CloudToken is Ownable {
         _mint(msg.sender, _supply);
     }
 
+    /**
+        @dev When a user sends ether to the contract, we can use this function
+        to determine the value of one usd in ether. Then we can peg our cloud token
+        at exactly one usd or anyother value
+     */
     function usd_to_wei(uint256 _eth_usd, uint8 _decimals) public pure returns (uint256) {
         uint16 power = 18 + _decimals;
         return (10 ** power).div(_eth_usd);
