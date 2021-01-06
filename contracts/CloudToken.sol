@@ -33,7 +33,8 @@ contract CloudToken is Ownable, Token {
 
     /// @dev When the contract receives only ether, it'll create some new tokens for the sender
     receive() external payable {
-        _mint(msg.sender, msg.value);
+        uint256 pennyInWei = fetchUsdInWei() / 100;
+        _mint(msg.sender, msg.value / pennyInWei); // Sender will get a token for every $.01 they send
     }
 
     /// @dev There really isn't any reason we should get data and/or ether
