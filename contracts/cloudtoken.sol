@@ -16,14 +16,71 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract CloudToken is Ownable {
     using SafeMath for uint256;
 
+    uint256 private _totalSupply; // Total number of tokens in existence
+    mapping(address => uint256) private _balances; // Token holder balances
+    mapping(address => mapping(address => uint256)) private _allowances; // Map of allowances
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
+
+    /// @dev Amount '_supply' is the total supply of tokens in existence
+    /// @dev '_feedAddress' is the address of a chainlink ETH/USD price feed oracle
+    constructor(uint256 _supply) public {
+        _mint(msg.sender, _supply);
+    }
+
+    /// @dev When the contract receives only ether, it'll create some new tokens for the sender
     receive() external payable {
         _mint(msg.sender, msg.value);
     }
 
+    /// @dev There really isn't any reason we should get data and/or ether
     fallback() external {
         revert(); // dev: Fallback function called
     }
 
+    /// @dev Approve the spending of '_amount' of sender tokens by spender
+    function approve(address _spender, uint256 _amount)
+        external
+        returns (bool)
+    {
+        _allowances[msg.sender][_spender] = _amount; // Set the balance, overwritting the previous allowance
+        emit Approval(msg.sender, _spender, _amount);
+        return true;
+    }
+
+    /**
+        @dev Transfer '_amount' of tokens to '_recipient' from sender.
+        This is a wrapper around the _transfer function.
+     */
+    function transfer(address _recipient, uint256 _amount)
+        external
+        _verify_balance(msg.sender, _amount)
+        returns (bool)
+    {
+        _transfer(msg.sender, _recipient, _amount);
+        return true;
+    }
+
+    /// @dev Tranfer tokens from '_owner' to '_recipient' and decrement sender's allowance
+    function transferFrom(address _sender, address _recipient, uint256 _amount)
+        external
+        _verify_allowance(_sender, msg.sender, _amount)
+        _verify_balance(_sender, _amount)
+        returns (bool)
+    {
+        _allowances[_sender][msg.sender] = _allowances[_sender][msg.sender].sub(
+            _amount
+        );
+        _transfer(_sender, _recipient, _amount);
+        return true;
+    }
+
+    /// @dev Withdraw ether from smart contract
     function withdraw(address _recipient, uint256 _amount)
         external
         onlyOwner
@@ -35,21 +92,23 @@ contract CloudToken is Ownable {
         return true;
     }
 
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
+    /// @dev Check the remaining number of tokens '_spender' is allowed to spend on '_owner' behalf
+    function allowance(address _owner, address _spender)
+        external
+        view
+        returns (uint256)
+    {
+        return _allowances[_owner][_spender];
+    }
 
-    uint256 private _totalSupply; // Total number of tokens in existence
-    mapping(address => uint256) private _balances; // Token holder balances
-    mapping(address => mapping(address => uint256)) private _allowances; // Map of allowances
+    /// @dev Return the balance of a token holder
+    function balanceOf(address _account) external view returns (uint256) {
+        return _balances[_account];
+    }
 
-    /// @dev Amount '_supply' is the total supply of tokens in existence
-    /// @dev '_feedAddress' is the address of a chainlink ETH/USD price feed oracle
-    constructor(uint256 _supply) public {
-        _mint(msg.sender, _supply);
+    /// @dev Return the total supply of tokens in existence
+    function totalSupply() external view returns (uint256) {
+        return _totalSupply;
     }
 
     /**
@@ -68,60 +127,13 @@ contract CloudToken is Ownable {
         _totalSupply = _totalSupply.add(_amount);
     }
 
-    /// @dev Return the total supply of tokens in existence
-    function totalSupply() external view returns (uint256) {
-        return _totalSupply;
-    }
-
-    /// @dev Return the balance of a token holder
-    function balanceOf(address _account) external view returns (uint256) {
-        return _balances[_account];
-    }
-
-    /**
-        @dev Transfer '_amount' of tokens to '_recipient' from sender.
-        This is a wrapper around the _transfer function.
-     */
-    function transfer(address _recipient, uint256 _amount)
-        external
-        _verify_balance(msg.sender, _amount)
-        returns (bool)
+    /// @dev Private function which implements the core transfer logic
+    function _transfer(address _sender, address _recipient, uint256 _amount)
+        private
     {
-        _transfer(msg.sender, _recipient, _amount);
-        return true;
-    }
-
-    /// @dev Check the remaining number of tokens '_spender' is allowed to spend on '_owner' behalf
-    function allowance(address _owner, address _spender)
-        external
-        view
-        returns (uint256)
-    {
-        return _allowances[_owner][_spender];
-    }
-
-    /// @dev Approve the spending of '_amount' of sender tokens by spender
-    function approve(address _spender, uint256 _amount)
-        external
-        returns (bool)
-    {
-        _allowances[msg.sender][_spender] = _amount; // Set the balance, overwritting the previous allowance
-        emit Approval(msg.sender, _spender, _amount);
-        return true;
-    }
-
-    /// @dev Tranfer tokens from '_owner' to '_recipient' and decrement sender's allowance
-    function transferFrom(address _sender, address _recipient, uint256 _amount)
-        external
-        _verify_allowance(_sender, msg.sender, _amount)
-        _verify_balance(_sender, _amount)
-        returns (bool)
-    {
-        _allowances[_sender][msg.sender] = _allowances[_sender][msg.sender].sub(
-            _amount
-        );
-        _transfer(_sender, _recipient, _amount);
-        return true;
+        _balances[_sender] = _balances[_sender].sub(_amount);
+        _balances[_recipient] = _balances[_recipient].add(_amount);
+        emit Transfer(_sender, _recipient, _amount);
     }
 
     /**
@@ -133,6 +145,10 @@ contract CloudToken is Ownable {
         _;
     }
 
+    /**
+        @dev Modifier to verify that '_spender' has a sufficient balance
+        to spend '_owner's tokens
+     */
     modifier _verify_allowance(
         address _owner,
         address _spender,
@@ -142,12 +158,4 @@ contract CloudToken is Ownable {
         _;
     }
 
-    /// @dev Private function which implements the core transfer logic
-    function _transfer(address _sender, address _recipient, uint256 _amount)
-        private
-    {
-        _balances[_sender] = _balances[_sender].sub(_amount);
-        _balances[_recipient] = _balances[_recipient].add(_amount);
-        emit Transfer(_sender, _recipient, _amount);
-    }
 }
