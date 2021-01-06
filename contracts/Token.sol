@@ -39,7 +39,7 @@ contract Token {
      */
     function transfer(address _recipient, uint256 _amount)
         external
-        _verify_balance(msg.sender, _amount)
+        verifyBalance(msg.sender, _amount)
         returns (bool)
     {
         _transfer(msg.sender, _recipient, _amount);
@@ -49,8 +49,8 @@ contract Token {
     /// @dev Tranfer tokens from '_owner' to '_recipient' and decrement sender's allowance
     function transferFrom(address _sender, address _recipient, uint256 _amount)
         external
-        _verify_allowance(_sender, msg.sender, _amount)
-        _verify_balance(_sender, _amount)
+        verifyAllowance(_sender, msg.sender, _amount)
+        verifyBalance(_sender, _amount)
         returns (bool)
     {
         _allowances[_sender][msg.sender] = _allowances[_sender][msg.sender].sub(
@@ -98,7 +98,7 @@ contract Token {
         @dev Modifier to verify that '_account' has a balance of '_amount'
         or greater
      */
-    modifier _verify_balance(address _account, uint256 _amount) {
+    modifier verifyBalance(address _account, uint256 _amount) {
         require(_balances[_account] >= _amount); // dev: Insufficient balance
         _;
     }
@@ -107,7 +107,7 @@ contract Token {
         @dev Modifier to verify that '_spender' has a sufficient balance
         to spend '_owner's tokens
      */
-    modifier _verify_allowance(
+    modifier verifyAllowance(
         address _owner,
         address _spender,
         uint256 _amount

@@ -23,4 +23,4 @@ def test_usd_to_wei_returns_correct_amount(token, eth_usd, decimals):
 @pytest.mark.xfail(strict=True, raises=ValueError)
 def test_usd_to_wei_reverts_when_eth_usd_is_negative(token):
     with brownie.reverts("SafeCast: value must be positive"):
-        token.usd_to_wei(-1000_00, 2)
+        token.usdToWei(-1000_00, 2)
