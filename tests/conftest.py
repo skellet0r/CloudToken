@@ -14,9 +14,15 @@ def beth(accounts):
 
 
 @pytest.fixture(scope="module")
-def token(adam, CloudToken):
+def oracle(adam, PriceFeedOracle):
+    """Deploy a mocked price feed oracle"""
+    return adam.deploy(PriceFeedOracle)
+
+
+@pytest.fixture(scope="module")
+def token(adam, oracle, CloudToken):
     """Deploy the contract and return it"""
-    return adam.deploy(CloudToken, 10 ** 21)
+    return adam.deploy(CloudToken, 10 ** 21, oracle.address)
 
 
 @pytest.fixture(autouse=True)
