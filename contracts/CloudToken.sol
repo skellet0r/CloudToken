@@ -24,6 +24,21 @@ contract CloudToken is Ownable, Token {
 
     AggregatorV3Interface private priceFeed;
 
+    enum CloudType {
+        Altocumulus,
+        Altostratus,
+        Cirrocumulus,
+        Cirrostratus,
+        Cirrus,
+        Cumulonimbus,
+        Cumulus,
+        Nimbostratus,
+        Stratocumulus,
+        Stratus
+    }
+
+    event CloudFormation(uint256 timestamp, uint256 ttl, CloudType cloudType);
+
     /// @dev Amount '_supply' is the total supply of tokens in existence
     /// @dev '_feedAddress' is the address of a chainlink ETH/USD price feed oracle
     constructor(uint256 _supply, address _priceFeedAddress) public {
@@ -40,6 +55,14 @@ contract CloudToken is Ownable, Token {
     /// @dev There really isn't any reason we should get data and/or ether
     fallback() external {
         revert(); // dev: Fallback function called
+    }
+
+    /// @notice Create a cloud that'll exist for '_ttl' minutes of '_cloudType' type
+    /// @dev This function does the equivalent of burning tokens, and emits a formed cloud
+    function createCloud(uint256 _ttl, CloudType _cloudType) external verifyBalance(msg.sender, _ttl) returns (bool) {
+        _balances[msg.sender] = _balances[msg.sender].sub(_ttl);
+        emit CloudFormation(block.timestamp, _ttl, _cloudType);
+        return true;
     }
 
     /// @dev Withdraw ether from smart contract
