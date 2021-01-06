@@ -13,7 +13,7 @@ def test_usd_to_wei_returns_correct_amount(token, eth_usd, decimals):
     power = decimals + 18
     one_usd_in_wei = (10 ** power) // eth_usd
 
-    assert token.usd_to_wei(eth_usd, decimals) == one_usd_in_wei
+    assert token.usdToWei(eth_usd, decimals) == one_usd_in_wei
 
 
 # for some reason brownie.reverts doesn't catch the error
