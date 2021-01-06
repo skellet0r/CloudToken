@@ -43,11 +43,13 @@ console:
 
 reports:
   exclude_paths: null
-  exclude_contracts: null
+  exclude_contracts:
+    - PriceFeedOracle
+    - Ownable
 
 hypothesis:
   deadline: null
-  max_examples: 50
+  max_examples: 30
   report_multiple_bugs: False
   stateful_step_count: 10
   phases:

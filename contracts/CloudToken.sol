@@ -24,6 +24,7 @@ contract CloudToken is Ownable, Token {
 
     AggregatorV3Interface private priceFeed;
 
+    // 10 choices of clouds
     enum CloudType {
         Altocumulus,
         Altostratus,
