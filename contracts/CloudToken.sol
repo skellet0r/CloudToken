@@ -53,10 +53,22 @@ contract CloudToken is Ownable, Token {
         return true;
     }
 
+    /// @dev Publicly accessible function to determine price of USD in wei
+    function fetchUsdInWei() public view returns (uint256) {
+        (, int256 price,,,) = priceFeed.latestRoundData();
+        uint8 decimals = priceFeed.decimals();
+        return usdToWei(price, decimals);
+    }
+
     /**
         @dev When a user sends ether to the contract, we can use this function
         to determine the value of one usd in ether. Then we can peg our cloud token
         at exactly one usd or anyother value
+        @param '_ethUsd' is the value of 1 ether in usd, this is a whole number
+        which is derived by taking the float literal ethUSd conversion rate
+        and multiplying by 10 ** decimals.
+        @param '_decimals' the power of 10, which when multiplied with '_ethUsd'
+        returns a whole number with no decimals
 
      */
     function usdToWei(int256 _ethUsd, uint8 _decimals) public pure returns (uint256) {
