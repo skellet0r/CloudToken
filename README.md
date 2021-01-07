@@ -1,6 +1,9 @@
 # Cloud Token
 An ERC-20 token for when you have your head in the clouds.
 
+Deployed on Rinkeby Test Network
+Contract Address: `0x02c3e2E97b3a3E05dDc78a165af72674b51B8155`
+
 Libraries/Utilities Used:
 
 - [Brownie](https://github.com/eth-brownie/brownie): A Python-based development and testing framework for smart contracts targeting the Ethereum Virtual Machine.
