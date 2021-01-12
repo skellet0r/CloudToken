@@ -21,6 +21,7 @@ If you'd like to build on the work here, you can clone this repository locally a
 Required dependencies:
 
 - Conda
+- NodeJs/NPM
 
 1. Clone the repository
 
@@ -41,7 +42,13 @@ Required dependencies:
    $ conda activate CloudToken
    ```
 
-4. :rocket: Have fun!
+4. Install `ganache-cli``
+
+   ```bash
+   $ npm install -g ganache-cli
+   ```
+
+5. :rocket: Have fun!
 
 ### Running the Test Suite
 
